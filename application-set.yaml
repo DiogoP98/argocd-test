@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: helm-applicationset
+  namespace: argocd
+spec:
+  generators:
+    - git:
+        repoURL: https://github.com/DiogoP98/argocd-test
+        revision: main
+        directories:
+          - path: '*'
+  template:
+    metadata:
+      name: '{{path.basename}}'
