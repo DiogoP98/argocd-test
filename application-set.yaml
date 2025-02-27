@@ -1,15 +1,34 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: helm-applicationset
+  name: nginx-applicationset
   namespace: argocd
 spec:
   generators:
     - git:
         repoURL: https://github.com/DiogoP98/argocd-test
-        revision: main
+        revision: HEAD
         directories:
-          - path: '*'
+          - path: applications-helm/values/*
   template:
     metadata:
-      name: '{{path.basename}}'
+      name: '{{path.basename}}-nginx'
+      annotations:
+        argocd.argoproj.io/manifest-generate-paths: ".;.." 
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/DiogoP98/argocd-test
+        targetRevision: HEAD
+        chart: applications-helm/chart/Chart.yaml
+        helm:
+          valueFiles:
+            - applications-helm/values/{{path.basename}}/values.yaml
+            - applications-helm/chart/values.yaml
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: 'default'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
