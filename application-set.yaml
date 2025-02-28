@@ -7,27 +7,21 @@ spec:
   generators:
     - git:
         repoURL: https://github.com/DiogoP98/argocd-test
-        revision: HEAD
+        revision: main
         directories:
-          - path: applications-helm/values/*
+          - path: applications-helm/*
   template:
     metadata:
       name: '{{path.basename}}-nginx'
-      annotations:
-        argocd.argoproj.io/manifest-generate-paths: ".;.." 
     spec:
       project: default
       source:
         repoURL: https://github.com/DiogoP98/argocd-test
-        targetRevision: HEAD
-        chart: applications-helm/chart/Chart.yaml
-        helm:
-          valueFiles:
-            - applications-helm/values/{{path.basename}}/values.yaml
-            - applications-helm/chart/values.yaml
+        targetRevision: main
+        path: applications-helm/{{path.basename}}
       destination:
         server: https://kubernetes.default.svc
-        namespace: 'default'
+        namespace: default
       syncPolicy:
         automated:
           prune: true
