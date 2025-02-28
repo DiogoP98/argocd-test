@@ -7,9 +7,9 @@ spec:
   generators:
     - git:
         repoURL: https://github.com/DiogoP98/argocd-test
-        revision: main
+        revision: HEAD
         directories:
-          - path: applications-helm/*
+          - path: applications-set/*
   template:
     metadata:
       name: '{{path.basename}}-nginx'
@@ -17,8 +17,8 @@ spec:
       project: default
       source:
         repoURL: https://github.com/DiogoP98/argocd-test
-        targetRevision: main
-        path: applications-helm/{{path.basename}}
+        targetRevision: HEAD
+        path: applications-set/{{path.basename}}
       destination:
         server: https://kubernetes.default.svc
         namespace: default
